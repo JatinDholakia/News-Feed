@@ -8,20 +8,17 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "likes", indexes = {@Index(columnList = "userId, postId")})
+@Entity(name = "likes")
 @Data @NoArgsConstructor
+@IdClass(LikeId.class)
 public class Like {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
 
     @JoinColumn(name = "post_id", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
     @Column(name = "post_id")
+    @Id
     private long postId;
 
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
@@ -29,6 +26,7 @@ public class Like {
     private User user;
 
     @Column(name = "user_id")
+    @Id
     private long userId;
 
     @CreationTimestamp
