@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyList;
+
 
 @ExtendWith(MockitoExtension.class)
 class NewsFeedServiceTest {
@@ -113,5 +115,28 @@ class NewsFeedServiceTest {
 
         // Assert
         Assertions.assertEquals(feedItems.size(), result.size());
+    }
+
+    @Test
+    void updateScore_ValidPostId_FeedItemsSaved() {
+        // Arrange
+        Post post = new Post();
+        post.setId(1L);
+        post.setCategory(Category.TECH);
+        post.setCreatedAt(LocalDateTime.now().minusSeconds(10));
+        FeedItem feedItem = new FeedItem(2L, post.getId(), 1.0, LocalDateTime.now());
+
+        User follower = new User();
+        follower.setInterests(List.of(Category.TECH));
+        Mockito.when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
+        Mockito.when(feedItemRepository.findByPostId(post.getId())).thenReturn(List.of(feedItem));
+        Mockito.when(userService.findById(feedItem.getUserId())).thenReturn(follower);
+
+        // Act
+        newsFeedService.updateScore(post.getId());
+
+        // Assert
+        Mockito.verify(userService, Mockito.times(1)).findById(feedItem.getUserId());
+        Mockito.verify(feedItemRepository, Mockito.times(1)).saveAll(anyList());
     }
 }

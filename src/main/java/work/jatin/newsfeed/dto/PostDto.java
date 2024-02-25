@@ -23,11 +23,15 @@ public class PostDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long likeCount;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long commentCount;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double latitude;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double longitude;
 }
