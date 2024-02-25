@@ -15,7 +15,6 @@ import work.jatin.newsfeed.dto.FeedItemDto;
 import work.jatin.newsfeed.exceptions.NewsFeedExceptionHandler;
 import work.jatin.newsfeed.services.NewsFeedService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -45,25 +44,23 @@ class NewsFeedControllerTest {
     @Test
     void getFeed_ValidRequest_ReturnsOk() throws Exception {
         // Arrange
-        String ip = "192.168.1.1";
+        int pageNo = 0;
         int pageSize = 10;
-        LocalDateTime endTime = LocalDateTime.now();
         long userId = 1L;
 
         List<FeedItemDto> feedItems = List.of(new FeedItemDto());
-        when(newsFeedService.getFeed(ip, pageSize, endTime, userId)).thenReturn(feedItems);
+        when(newsFeedService.getFeed(pageNo, pageSize, userId)).thenReturn(feedItems);
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/feed")
-                        .param("ip", ip)
+                        .param("pageNo", String.valueOf(pageNo))
                         .param("pageSize", String.valueOf(pageSize))
-                        .param("endTime", endTime.toString())
                         .header("User-Id", String.valueOf(userId))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray());
 
         // Verify
-        verify(newsFeedService, times(1)).getFeed(ip, pageSize, endTime, userId);
+        verify(newsFeedService, times(1)).getFeed(pageNo, pageSize, userId);
     }
 }

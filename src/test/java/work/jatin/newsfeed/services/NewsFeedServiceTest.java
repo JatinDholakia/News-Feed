@@ -8,7 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import work.jatin.newsfeed.dto.FeedItemDto;
 import work.jatin.newsfeed.enums.Category;
 import work.jatin.newsfeed.models.FeedItem;
@@ -16,10 +18,12 @@ import work.jatin.newsfeed.models.Post;
 import work.jatin.newsfeed.models.User;
 import work.jatin.newsfeed.models.UserNode;
 import work.jatin.newsfeed.repositories.FeedItemRepository;
+import work.jatin.newsfeed.repositories.PostRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -31,39 +35,11 @@ class NewsFeedServiceTest {
     @Mock
     private FeedItemRepository feedItemRepository;
 
+    @Mock
+    PostRepository postRepository;
+
     @InjectMocks
     private NewsFeedService newsFeedService;
-
-    @Test
-    void addPost_ValidPost_AddsToFollowersFeed() {
-        // Arrange
-        Post post = new Post();
-        post.setId(1L);
-        post.setCategory(Category.TECH);
-        long userId = 1L;
-
-        UserNode follower1Node = new UserNode(2L);
-        UserNode follower2Node = new UserNode(3L);
-        List<UserNode> followers = List.of(follower1Node, follower2Node);
-
-        User follower1 = new User();
-        follower1.setId(2L);
-        follower1.setInterests(List.of(Category.TECH, Category.NEWS));
-        User follower2 = new User();
-        follower2.setId(3L);
-        follower2.setInterests(List.of(Category.NEWS, Category.SPORTS));
-
-        Mockito.when(userService.getFollowers(userId)).thenReturn(followers);
-        Mockito.when(userService.findById(follower1.getId())).thenReturn(follower1);
-        Mockito.when(userService.findById(follower2.getId())).thenReturn(follower2);
-
-        // Act
-        newsFeedService.addPost(post, userId);
-
-        // Assert
-        Mockito.verify(userService, Mockito.times(1)).getFollowers(userId);
-        Mockito.verify(feedItemRepository, Mockito.times(1)).save(ArgumentMatchers.any(FeedItem.class));
-    }
 
     @Test
     void addToFollowerFeed_UserHasInterest_SaveToFeedItemRepository() {
@@ -71,6 +47,7 @@ class NewsFeedServiceTest {
         Post post = new Post();
         post.setId(1L);
         post.setCategory(Category.TECH);
+        post.setCreatedAt(LocalDateTime.now().minusSeconds(10));
 
         UserNode followerNode = new UserNode(2L);
         User follower = new User();
@@ -110,25 +87,29 @@ class NewsFeedServiceTest {
     @Test
     void getFeed_ValidParameters_ReturnsFeedItemDtoList() {
         // Arrange
-        String ip = "49.37.161.205";
+        int pageNo = 0;
         int pageSize = 10;
-        LocalDateTime endTime = LocalDateTime.now();
         long userId = 1L;
 
         List<FeedItem> feedItems = new ArrayList<>();
-        FeedItem feedItem = new FeedItem(2L, 2L, LocalDateTime.now().minusSeconds(20));
+        FeedItem feedItem = new FeedItem(2L, 2L, 1.0, LocalDateTime.now().minusSeconds(20));
         Post post = new Post("post 2", Category.TECH);
-        User user = new User("user1", List.of(Category.TECH));
+        User user = new User("user1", List.of(Category.TECH), 12.9716, 77.5946);
         user.setId(userId);
+        post.setId(2L);
         post.setUser(user);
         post.setCreatedAt(LocalDateTime.now().minusSeconds(10));
-        feedItem.setPost(post);
+        feedItem.setPostId(post.getId());
         feedItems.add(feedItem);
-        Mockito.when(feedItemRepository.findByUserIdAndCreatedAtBeforeOrderByCreatedAtDesc(userId, endTime, PageRequest.of(0, pageSize)))
-                .thenReturn(feedItems);
+        Sort.TypedSort<FeedItem> typedSort = Sort.sort(FeedItem.class);
+        Sort sort = typedSort.by(FeedItem::getScore).ascending()
+                .and(typedSort.by(FeedItem::getCreatedAt).descending());
+        Mockito.when(feedItemRepository.findByUserId(userId, PageRequest.of(0, pageSize, sort)))
+                .thenReturn(new PageImpl<>(feedItems));
+        Mockito.when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
 
         // Act
-        List<FeedItemDto> result = newsFeedService.getFeed(ip, pageSize, endTime, userId);
+        List<FeedItemDto> result = newsFeedService.getFeed(pageNo, pageSize, userId);
 
         // Assert
         Assertions.assertEquals(feedItems.size(), result.size());

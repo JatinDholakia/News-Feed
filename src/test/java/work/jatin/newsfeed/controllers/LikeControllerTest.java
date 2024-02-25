@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import work.jatin.newsfeed.exceptions.NewsFeedExceptionHandler;
 import work.jatin.newsfeed.services.LikeService;
+import work.jatin.newsfeed.services.NewsFeedService;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,6 +28,9 @@ class LikeControllerTest {
 
     @Mock
     private LikeService likeService;
+
+    @Mock
+    NewsFeedService newsFeedService;
 
     @InjectMocks
     private LikeController likeController;

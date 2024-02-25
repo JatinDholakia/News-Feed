@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import work.jatin.newsfeed.dto.CommentDto;
 import work.jatin.newsfeed.exceptions.NewsFeedExceptionHandler;
 import work.jatin.newsfeed.services.CommentService;
+import work.jatin.newsfeed.services.NewsFeedService;
 
 import java.util.Collections;
 
@@ -29,6 +30,9 @@ class CommentControllerTest {
 
     @Mock
     private CommentService commentService;
+
+    @Mock
+    NewsFeedService newsFeedService;
 
     @InjectMocks
     private CommentController commentController;

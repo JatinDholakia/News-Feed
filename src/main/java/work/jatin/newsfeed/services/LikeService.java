@@ -1,7 +1,7 @@
 package work.jatin.newsfeed.services;
 
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import work.jatin.newsfeed.exceptions.DuplicateLikeException;
 import work.jatin.newsfeed.exceptions.ResourceNotFoundException;
 import work.jatin.newsfeed.models.Like;

@@ -9,8 +9,10 @@ import work.jatin.newsfeed.dto.PostDto;
 import work.jatin.newsfeed.exceptions.ResourceNotFoundException;
 import work.jatin.newsfeed.models.Post;
 import work.jatin.newsfeed.models.User;
+import work.jatin.newsfeed.models.UserNode;
 import work.jatin.newsfeed.repositories.PostRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +44,10 @@ class PostServiceTest {
 
         User user = new User();
         user.setId(userId);
+        UserNode follower1 = new UserNode();
+        UserNode follower2 = new UserNode();
         when(userService.existsById(userId)).thenReturn(true);
+        when(userService.getFollowers(userId)).thenReturn(List.of(follower1, follower2));
 
         Post savedPost = new Post();
         savedPost.setDescription("Test post");
@@ -54,7 +59,7 @@ class PostServiceTest {
         // Assert
         assertNotNull(savedPostDto);
         assertEquals(savedPostDto.getDescription(), postDto.getDescription());
-        verify(newsFeedService, times(1)).addPost(any(Post.class), eq(userId));
+        verify(newsFeedService, times(2)).addToFollowerFeed(any(Post.class), any(UserNode.class));
     }
 
     @Test

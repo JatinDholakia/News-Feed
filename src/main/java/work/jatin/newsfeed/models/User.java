@@ -17,12 +17,18 @@ public class User {
 
     private String name;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Category> interests;
 
-    public User(String name, List<Category> interests) {
+    private double latitude;
+
+    private double longitude;
+
+    public User(String name, List<Category> interests, double latitude, double longitude) {
         this.name = name;
         this.interests = interests;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
 }

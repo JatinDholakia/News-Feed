@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import work.jatin.newsfeed.enums.Category;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class PostDto {
@@ -17,4 +19,15 @@ public class PostDto {
 
     @NotNull(message = "category is required")
     private Category category;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime createdAt;
+
+    private long likeCount;
+
+    private long commentCount;
+
+    private double latitude;
+
+    private double longitude;
 }

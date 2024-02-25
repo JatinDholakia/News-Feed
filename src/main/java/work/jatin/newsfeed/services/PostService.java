@@ -9,10 +9,12 @@ import work.jatin.newsfeed.exceptions.LocationNotFoundException;
 import work.jatin.newsfeed.exceptions.ResourceNotFoundException;
 import work.jatin.newsfeed.mapper.PostMapper;
 import work.jatin.newsfeed.models.Post;
+import work.jatin.newsfeed.models.UserNode;
 import work.jatin.newsfeed.repositories.PostRepository;
 import work.jatin.newsfeed.utils.LocationUtils;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -53,7 +55,8 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         // fan-out to followers' news feed (Async)
-        newsFeedService.addPost(post, userId);
+        List<UserNode> followers = userService.getFollowers(userId);
+        followers.forEach(follower -> newsFeedService.addToFollowerFeed(post, follower));
         return PostMapper.convertToPostDto(savedPost);
     }
 

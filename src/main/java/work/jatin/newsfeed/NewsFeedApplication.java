@@ -39,9 +39,9 @@ public class NewsFeedApplication {
         userNodeRepository.deleteAll();
         userRepository.deleteAll();
 
-        User greg = userService.save(new User("greg", List.of(Category.TECH)));
-        User roy = userService.save(new User("roy", List.of(Category.TECH)));
-        User craig = userService.save(new User("craig", List.of(Category.TECH)));
+        User greg = userService.save(new User("greg", List.of(Category.TECH), 12.9716, 77.5946));
+        User roy = userService.save(new User("roy", List.of(Category.TECH), 12.9716, 77.5946));
+        User craig = userService.save(new User("craig", List.of(Category.TECH), 12.9716, 77.5946));
 
         UserNode gregNode = userNodeRepository.findByUserId(greg.getId());
         UserNode royNode = userNodeRepository.findByUserId(roy.getId());

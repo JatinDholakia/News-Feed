@@ -9,7 +9,12 @@ public class PostMapper {
     public static PostDto convertToPostDto(Post post) {
         return new PostDto(post.getId(),
                 post.getDescription(),
-                post.getCategory());
+                post.getCategory(),
+                post.getCreatedAt(),
+                post.getLikeCount(),
+                post.getCommentCount(),
+                post.getLatitude(),
+                post.getLongitude());
     }
 
     public static Post convertToPost(PostDto postDto) {

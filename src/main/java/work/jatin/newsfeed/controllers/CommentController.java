@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import work.jatin.newsfeed.dto.APIResponse;
 import work.jatin.newsfeed.dto.CommentDto;
 import work.jatin.newsfeed.services.CommentService;
+import work.jatin.newsfeed.services.NewsFeedService;
 
 import java.util.List;
 
@@ -18,9 +19,12 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final NewsFeedService newsFeedService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService,
+                             NewsFeedService newsFeedService) {
         this.commentService = commentService;
+        this.newsFeedService = newsFeedService;
     }
 
     @Operation(summary = "Comment on a post")
@@ -34,7 +38,9 @@ public class CommentController {
     public APIResponse<CommentDto> addComment(@PathVariable long postId,
                                               @Valid @RequestBody CommentDto commentDto,
                                               @RequestHeader("User-Id") long userId) {
-        return new APIResponse<>(HttpStatus.CREATED, commentService.addComment(commentDto, postId, userId));
+        CommentDto response = commentService.addComment(commentDto, postId, userId);
+        newsFeedService.updateScore(postId);
+        return new APIResponse<>(HttpStatus.CREATED, response);
     }
 
     // TODO : Pagination

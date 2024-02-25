@@ -6,15 +6,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import work.jatin.newsfeed.services.LikeService;
+import work.jatin.newsfeed.services.NewsFeedService;
 
 @RestController
 @RequestMapping("/api/v1/posts/{postId}/likes")
 public class LikeController {
 
     private final LikeService likeService;
+    private final NewsFeedService newsFeedService;
 
-    public LikeController(LikeService likeService) {
+    public LikeController(LikeService likeService,
+                          NewsFeedService newsFeedService) {
         this.likeService = likeService;
+        this.newsFeedService = newsFeedService;
     }
 
     @Operation(summary = "Like a post")
@@ -29,6 +33,7 @@ public class LikeController {
     public void likePost(@PathVariable long postId,
                          @RequestHeader("User-Id") long userId) {
         likeService.likePost(postId, userId);
+        newsFeedService.updateScore(postId);
     }
 
     @Operation(summary = "Remove like from a post")
@@ -40,6 +45,7 @@ public class LikeController {
     public void removeLike(@PathVariable long postId,
                            @RequestHeader("User-Id") long userId) {
         likeService.removeLike(postId, userId);
+        newsFeedService.updateScore(postId);
     }
 
     // TODO : Get all likes of post

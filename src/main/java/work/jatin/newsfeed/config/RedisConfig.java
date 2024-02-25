@@ -23,7 +23,7 @@ import java.time.Duration;
 @Getter
 @Setter
 @EnableCaching
-@EnableRedisRepositories
+@EnableRedisRepositories(basePackages = "work.jatin.newsfeed.repositories")
 public class RedisConfig {
 
     private long ttl;
