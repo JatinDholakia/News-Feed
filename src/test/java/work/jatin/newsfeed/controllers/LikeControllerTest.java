@@ -53,7 +53,7 @@ class LikeControllerTest {
         mockMvc.perform(post("/api/v1/posts/{postId}/likes", postId)
                         .header("User-Id", userId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         // Verify
         verify(likeService, times(1)).likePost(postId, userId);

@@ -37,7 +37,6 @@ public class NewsFeedService {
         this.postRepository = postRepository;
     }
 
-    // TODO : Move logic to SQL query on user_interests
     @Async
     public void addToFollowerFeed(Post post, UserNode followerNode) {
         User follower = userService.findById(followerNode.getUserId());

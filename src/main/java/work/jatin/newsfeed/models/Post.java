@@ -22,12 +22,6 @@ public class Post {
 
     private String description;
 
-    // TODO
-    private String image;
-
-    // TODO
-    private String video;
-
     @CreationTimestamp
     @LastModifiedDate
     private LocalDateTime createdAt;

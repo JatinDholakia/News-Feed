@@ -23,13 +23,14 @@ public class LikeController {
 
     @Operation(summary = "Like a post")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Like added"),
-            @ApiResponse(responseCode = "400", description = "User has already liked the post"),
+            @ApiResponse(responseCode = "201", description = "Like added"),
             @ApiResponse(responseCode = "404", description = "Post not found with given id \t\n" +
-                    "User not found with given id")
+                    "User not found with given id"),
+            @ApiResponse(responseCode = "422", description = "User has already liked the post"),
+
     })
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void likePost(@PathVariable long postId,
                          @RequestHeader("User-Id") long userId) {
         likeService.likePost(postId, userId);
@@ -47,8 +48,4 @@ public class LikeController {
         likeService.removeLike(postId, userId);
         newsFeedService.updateScore(postId);
     }
-
-    // TODO : Get all likes of post
-//    @GetMapping("/api/v1/posts/{postId}/likes")
-//    public ResponseEntity<List<UserDto>> getAllLikes(@PathVariable long )
 }

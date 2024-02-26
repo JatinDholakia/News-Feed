@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-// TODO : Add tests for exceptions
 class CommentControllerTest {
 
     private MockMvc mockMvc;

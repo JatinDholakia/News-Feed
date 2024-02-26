@@ -40,7 +40,6 @@ public class CommentService {
         return CommentMapper.convertToCommentDto(savedComment);
     }
 
-    // TODO : Pagination and sorting
     public List<CommentDto> getAllCommentsByPostId(long postId) {
         if (Boolean.FALSE.equals(postService.existsById(postId))) {
             throw new ResourceNotFoundException("Post not found with id = " + postId);

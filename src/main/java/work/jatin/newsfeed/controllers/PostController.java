@@ -24,12 +24,14 @@ public class PostController {
     @Operation(summary = "Create Post")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Post created"),
-            @ApiResponse(responseCode = "400", description =  "Location cannot be determined from ip address", content = @Content),
-            @ApiResponse(responseCode = "404", description = "User does not exist with given id", content = @Content)
+            @ApiResponse(responseCode = "400", description = """
+                    Description is null or empty \t
+                    Category is missing""", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User does not exist with given id", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Location cannot be determined from IP address", content = @Content)
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    // TODO : Add auth to derive userId
     public APIResponse<PostDto> createPost(@Valid @RequestBody PostDto postDto,
                                            @RequestHeader("User-Id") long userId,
                                            @RequestParam String ip) {

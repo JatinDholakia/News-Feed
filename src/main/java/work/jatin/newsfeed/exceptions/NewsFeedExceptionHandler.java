@@ -2,17 +2,18 @@ package work.jatin.newsfeed.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import work.jatin.newsfeed.dto.ErrorMessage;
 
 import java.util.List;
 
 @RestControllerAdvice
-public class NewsFeedExceptionHandler extends ResponseEntityExceptionHandler {
+public class NewsFeedExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorMessage> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
@@ -25,9 +26,9 @@ public class NewsFeedExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DuplicateLikeException.class)
     public ResponseEntity<ErrorMessage> handleDuplicateLikeException(DuplicateLikeException ex, WebRequest request) {
         return new ResponseEntity<>(new ErrorMessage(
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 List.of(ex.getMessage()),
-                request.getDescription(false)), HttpStatus.BAD_REQUEST);
+                request.getDescription(false)), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(MissingRequestValueException.class)
@@ -38,12 +39,19 @@ public class NewsFeedExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorMessage> handleValidationErrors(MethodArgumentNotValidException ex, WebRequest request) {
+        List<String> errors = ex.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
+        return new ResponseEntity<>(new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+                errors, request.getDescription(false)), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(LocationNotFoundException.class)
     public ResponseEntity<ErrorMessage> handleLocationNotFoundException(LocationNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(new ErrorMessage(
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 List.of(ex.getMessage()),
-                request.getDescription(false)), HttpStatus.BAD_REQUEST);
+                request.getDescription(false)), HttpStatus.UNPROCESSABLE_ENTITY);
     }
     @ExceptionHandler(Exception.class)
     public ErrorMessage handleGlobalExceptionHandler(Exception ex, WebRequest request) {

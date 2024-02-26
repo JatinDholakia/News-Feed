@@ -2,7 +2,6 @@ package work.jatin.newsfeed.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.Max;
@@ -27,8 +26,7 @@ public class NewsFeedController {
 
     @Operation(summary = "Get news feed of user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation"),
-            @ApiResponse(responseCode = "400", description = "Location cannot be determined from ip", content = @Content)
+            @ApiResponse(responseCode = "200", description = "successful operation")
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

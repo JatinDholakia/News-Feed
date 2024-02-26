@@ -5,12 +5,8 @@ import org.springframework.stereotype.Service;
 import work.jatin.newsfeed.models.Post;
 import work.jatin.newsfeed.utils.LocationUtils;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-
 @Service
 @Slf4j
-// TODO : Improve ranking algo
 public class RankingService {
 
     public static double getScore(Post post, double userLatitude, double userLongitude) {
@@ -21,9 +17,7 @@ public class RankingService {
                 post.getLatitude(),
                 post.getLongitude());
         distance = distance == 0 ? 1 : distance;
-        long time = ChronoUnit.SECONDS.between(post.getCreatedAt(), LocalDateTime.now());
-        time = time == 0 ? 1 : time;
-        log.info("getScore : likeScore {}, commentScore {}, distance {}, time {}", likeScore, commentScore, distance, time);
-        return ((likeScore * commentScore) / (distance * time));
+        log.info("getScore : likeScore {}, commentScore {}, distance {}", likeScore, commentScore, distance);
+        return ((likeScore * commentScore) / (distance));
     }
 }

@@ -30,7 +30,7 @@ public class CommentController {
     @Operation(summary = "Comment on a post")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Added comment"),
-            @ApiResponse(responseCode = "400", description = "Comment text is missing or blank", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Comment text is null or empty", content = @Content),
             @ApiResponse(responseCode = "404", description = "Post not found with given id \t\n " +
                     "User does not exist with given id", content = @Content)})
     @PostMapping
@@ -43,7 +43,6 @@ public class CommentController {
         return new APIResponse<>(HttpStatus.CREATED, response);
     }
 
-    // TODO : Pagination
     @Operation(summary = "Get all comments on a post sorted by creation date")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation"),
