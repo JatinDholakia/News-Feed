@@ -1,8 +1,10 @@
 package work.jatin.newsfeed.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -10,7 +12,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(indexes = {@Index(columnList = "postId, createdAt")})
-@Data @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Comment {
 
     @Id

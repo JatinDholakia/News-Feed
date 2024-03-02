@@ -11,10 +11,13 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import work.jatin.newsfeed.dto.PostDto;
+import work.jatin.newsfeed.dto.PostRequestDto;
+import work.jatin.newsfeed.dto.PostResponseDto;
 import work.jatin.newsfeed.enums.Category;
 import work.jatin.newsfeed.exceptions.NewsFeedExceptionHandler;
 import work.jatin.newsfeed.services.PostService;
+
+import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,26 +46,30 @@ class PostControllerTest {
     @Test
     void createPost_ValidRequest_ReturnsCreated() throws Exception {
         // Arrange
-        PostDto postDto = new PostDto();
-        postDto.setDescription("Post description");
-        postDto.setCategory(Category.NEWS);
+        String description = "Post Description";
+        Category category = Category.NEWS;
+        PostRequestDto postRequestDto = new PostRequestDto();
+        postRequestDto.setDescription(description);
+        postRequestDto.setCategory(category);
         long userId = 1L;
         String ip = "192.168.1.1";
 
-        when(postService.save(any(), anyLong(), anyString())).thenReturn(postDto);
+        PostResponseDto postResponseDto = new PostResponseDto(1L, description, category, LocalDateTime.now(), 0, 0);
+
+        when(postService.save(any(), anyLong(), anyString())).thenReturn(postResponseDto);
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/posts")
                         .header("User-Id", String.valueOf(userId))
                         .param("ip", ip)
-                        .content(asJsonString(postDto))
+                        .content(asJsonString(postRequestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.description").value(postDto.getDescription()))
-                .andExpect(jsonPath("$.data.category").value(postDto.getCategory().toString()));
+                .andExpect(jsonPath("$.data.description").value(postRequestDto.getDescription()))
+                .andExpect(jsonPath("$.data.category").value(postRequestDto.getCategory().toString()));
 
         // Verify
-        verify(postService, times(1)).save(any(PostDto.class), anyLong(), anyString());
+        verify(postService, times(1)).save(any(PostRequestDto.class), anyLong(), anyString());
     }
 
     // Helper method to convert object to JSON string

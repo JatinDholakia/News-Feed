@@ -8,7 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import work.jatin.newsfeed.dto.APIResponse;
-import work.jatin.newsfeed.dto.PostDto;
+import work.jatin.newsfeed.dto.PostRequestDto;
+import work.jatin.newsfeed.dto.PostResponseDto;
 import work.jatin.newsfeed.services.PostService;
 
 @RestController
@@ -32,9 +33,9 @@ public class PostController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public APIResponse<PostDto> createPost(@Valid @RequestBody PostDto postDto,
-                                           @RequestHeader("User-Id") long userId,
-                                           @RequestParam String ip) {
-        return new APIResponse<>(HttpStatus.CREATED, postService.save(postDto, userId, ip));
+    public APIResponse<PostResponseDto> createPost(@Valid @RequestBody PostRequestDto postRequestDto,
+                                                   @RequestHeader("User-Id") long userId,
+                                                   @RequestParam String ip) {
+        return new APIResponse<>(HttpStatus.CREATED, postService.save(postRequestDto, userId, ip));
     }
 }

@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class FeedItemDto {
     private UserDto user;
 
-    private PostDto post;
+    private PostResponseDto post;
 }

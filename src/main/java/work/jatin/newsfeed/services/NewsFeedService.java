@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import work.jatin.newsfeed.dto.FeedItemDto;
+import work.jatin.newsfeed.dto.PostResponseDto;
 import work.jatin.newsfeed.exceptions.ResourceNotFoundException;
 import work.jatin.newsfeed.mapper.PostMapper;
 import work.jatin.newsfeed.mapper.UserMapper;
@@ -29,12 +30,16 @@ public class NewsFeedService {
 
     private final PostRepository postRepository;
 
+    private final AwsS3Service amazonS3Service;
+
     public NewsFeedService(UserService userService,
                            FeedItemRepository feedItemRepository,
-                           PostRepository postRepository) {
+                           PostRepository postRepository,
+                           AwsS3Service amazonS3Service) {
         this.userService = userService;
         this.feedItemRepository = feedItemRepository;
         this.postRepository = postRepository;
+        this.amazonS3Service = amazonS3Service;
     }
 
     @Async
@@ -70,8 +75,11 @@ public class NewsFeedService {
         feed.forEach(feedItem -> {
             Post post = postRepository.findById(feedItem.getPostId())
                     .orElseThrow(() -> new ResourceNotFoundException("Post not found with id = " + feedItem.getPostId()));
-            FeedItemDto feedItemDto = new FeedItemDto(UserMapper.convertToUserDto(post.getUser()),
-                    PostMapper.convertToPostDto(post));
+            PostResponseDto postResponseDto = PostMapper.convertToPostResponseDto(post);
+            if (post.getS3Key() != null) {
+                postResponseDto.setPresignedUrl(amazonS3Service.createPresignedGetUrl(post.getS3Key()));
+            }
+            FeedItemDto feedItemDto = new FeedItemDto(UserMapper.convertToUserDto(post.getUser()), postResponseDto);
             result.add(feedItemDto);
         });
         return result;

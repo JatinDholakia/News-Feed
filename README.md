@@ -1,11 +1,11 @@
 ## News Feed
 
 A news feed for your social networking application
-* News updates/alerts for the topics I am interested in.
-* Most happening events around my location.
-* Updates or stories posted by friends.
-* An optimal ranking of the events which would make the news feed interesting in your platform
-when the user logs in.
+* Users can create Posts which are shared with followers
+* Posts can contain text and media
+* Users can also like and comment on a post
+* News Feed of followers are created when user creates a post
+* Ranking of posts in feed is based on parameters such as : Likes count, Comments count, time of post and distance of post from user.
 
   
 API Docs - https://app.swaggerhub.com/apis-docs/DHOLAKIA98/News-Feed/v0#/
@@ -17,3 +17,10 @@ Postman Collection - https://www.postman.com/warped-crater-862837/workspace/news
 
 ### Entity Relation Diagram
 ![Entity Relation Diagram](docs/News-Feed-ER-Diagram.svg)
+
+## Environment Variables
+* MYSQL_PASSWORD
+* NEO4J_PASSWORD
+* AWS_ACCESS_KEY_ID
+* AWS_SECRET_ACCESS_KEY
+* AWS_DEFAULT_REGION

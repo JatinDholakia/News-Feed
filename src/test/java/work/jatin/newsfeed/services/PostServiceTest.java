@@ -5,8 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import work.jatin.newsfeed.dto.PostDto;
+import work.jatin.newsfeed.dto.PostRequestDto;
+import work.jatin.newsfeed.dto.PostResponseDto;
+import work.jatin.newsfeed.enums.Category;
 import work.jatin.newsfeed.exceptions.ResourceNotFoundException;
+import work.jatin.newsfeed.mapper.PostMapper;
 import work.jatin.newsfeed.models.Post;
 import work.jatin.newsfeed.models.User;
 import work.jatin.newsfeed.models.UserNode;
@@ -31,16 +34,20 @@ class PostServiceTest {
     @Mock
     private NewsFeedService newsFeedService;
 
+    @Mock
+    AwsS3Service awsS3Service;
+
     @InjectMocks
     private PostService postService;
 
     @Test
-    void save_ValidPostDto_SuccessfullySaved() {
+    void save_ValidPostRequestDto_SuccessfullySaved() {
         // Arrange
         long userId = 1L;
         String ipAddress = "49.37.161.205";
-        PostDto postDto = new PostDto();
-        postDto.setDescription("Test post");
+        PostRequestDto postRequestDto = new PostRequestDto();
+        postRequestDto.setDescription("Test post");
+        postRequestDto.setCategory(Category.NEWS);
 
         User user = new User();
         user.setId(userId);
@@ -54,11 +61,47 @@ class PostServiceTest {
         when(postRepository.save(any(Post.class))).thenReturn(savedPost);
 
         // Act
-        PostDto savedPostDto = postService.save(postDto, userId, ipAddress);
+        PostResponseDto postResponseDto = postService.save(postRequestDto, userId, ipAddress);
 
         // Assert
-        assertNotNull(savedPostDto);
-        assertEquals(savedPostDto.getDescription(), postDto.getDescription());
+        assertNotNull(postResponseDto);
+        assertEquals(postResponseDto.getDescription(), postRequestDto.getDescription());
+        verify(newsFeedService, times(2)).addToFollowerFeed(any(Post.class), any(UserNode.class));
+    }
+
+    @Test
+    void save_PostRequestWithFileName_SuccessfullySaved() {
+        // Arrange
+        long userId = 1L;
+        String ipAddress = "49.37.161.205";
+        PostRequestDto postRequestDto = new PostRequestDto();
+        postRequestDto.setDescription("Test post");
+        postRequestDto.setCategory(Category.NEWS);
+        postRequestDto.setFileName("image.png");
+
+        User user = new User();
+        user.setId(userId);
+        when(userService.existsById(userId)).thenReturn(true);
+
+        String presignedUrl = "presigned url";
+        when(awsS3Service.createPresignedUrl(anyString())).thenReturn(presignedUrl);
+
+        Post savedPost = PostMapper.convertToPost(postRequestDto);
+        when(postRepository.save(any(Post.class))).thenReturn(savedPost);
+
+        UserNode follower1 = new UserNode();
+        UserNode follower2 = new UserNode();
+        when(userService.getFollowers(userId)).thenReturn(List.of(follower1, follower2));
+
+
+        // Act
+        PostResponseDto postResponseDto = postService.save(postRequestDto, userId, ipAddress);
+
+        // Assert
+        assertNotNull(postResponseDto);
+        assertEquals(postResponseDto.getDescription(), postRequestDto.getDescription());
+        assertEquals(postResponseDto.getCategory(), postRequestDto.getCategory());
+        assertEquals(postResponseDto.getPresignedUrl(), presignedUrl);
         verify(newsFeedService, times(2)).addToFollowerFeed(any(Post.class), any(UserNode.class));
     }
 
@@ -67,13 +110,13 @@ class PostServiceTest {
         // Arrange
         long userId = 1L;
         String ipAddress = "49.37.161.205";
-        PostDto postDto = new PostDto();
-        postDto.setDescription("Test post");
+        PostRequestDto postRequestDto = new PostRequestDto();
+        postRequestDto.setDescription("Test post");
 
         when(userService.existsById(userId)).thenReturn(false);
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> postService.save(postDto, userId, ipAddress));
+        assertThrows(ResourceNotFoundException.class, () -> postService.save(postRequestDto, userId, ipAddress));
         verifyNoInteractions(postRepository);
         verifyNoInteractions(newsFeedService);
     }

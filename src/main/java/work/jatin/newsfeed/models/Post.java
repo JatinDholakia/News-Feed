@@ -2,8 +2,9 @@ package work.jatin.newsfeed.models;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 import work.jatin.newsfeed.enums.Category;
@@ -12,7 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Post {
 
@@ -48,6 +50,8 @@ public class Post {
     private double longitude;
 
     private Category category;
+
+    private String s3Key;
 
     public Post(String description, Category category) {
         this.description = description;

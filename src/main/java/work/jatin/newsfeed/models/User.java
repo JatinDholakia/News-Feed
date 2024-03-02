@@ -1,14 +1,17 @@
 package work.jatin.newsfeed.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import work.jatin.newsfeed.enums.Category;
 
 import java.util.List;
 
 @Entity
-@Data @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
 
     @Id

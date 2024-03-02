@@ -1,24 +1,23 @@
 package work.jatin.newsfeed.mapper;
 
-import work.jatin.newsfeed.dto.PostDto;
+import work.jatin.newsfeed.dto.PostRequestDto;
+import work.jatin.newsfeed.dto.PostResponseDto;
 import work.jatin.newsfeed.models.Post;
 
 public class PostMapper {
 
 
-    public static PostDto convertToPostDto(Post post) {
-        return new PostDto(post.getId(),
+    public static PostResponseDto convertToPostResponseDto(Post post) {
+        return new PostResponseDto(post.getId(),
                 post.getDescription(),
                 post.getCategory(),
                 post.getCreatedAt(),
                 post.getLikeCount(),
-                post.getCommentCount(),
-                post.getLatitude(),
-                post.getLongitude());
+                post.getCommentCount());
     }
 
-    public static Post convertToPost(PostDto postDto) {
-        return new Post(postDto.getDescription(),
-                postDto.getCategory());
+    public static Post convertToPost(PostRequestDto postRequestDto) {
+        return new Post(postRequestDto.getDescription(),
+                postRequestDto.getCategory());
     }
 }
