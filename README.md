@@ -1,4 +1,4 @@
-## News Feed
+# News Feed
 
 A news feed for your social networking application
 * Users can create Posts which are shared with followers
@@ -12,10 +12,10 @@ API Docs - https://app.swaggerhub.com/apis-docs/DHOLAKIA98/News-Feed/v0#/
 
 Postman Collection - https://www.postman.com/warped-crater-862837/workspace/news-feed/collection/13803448-95027502-7e8c-45b1-8c7a-3faf165d7815?action=share&creator=13803448
 
-### High Level Diagram
+## High Level Diagram
 ![High Level Diagram](docs/News-Feed-HLD.svg)
 
-### Entity Relation Diagram
+## Entity Relation Diagram
 ![Entity Relation Diagram](docs/News-Feed-ER-Diagram.svg)
 
 ## Environment Variables
