@@ -8,15 +8,15 @@ A news feed for your social networking application
 * Ranking of posts in feed is based on parameters such as : Likes count, Comments count, time of post and distance of post from user.
 
   
-API Docs - https://app.swaggerhub.com/apis-docs/DHOLAKIA98/News-Feed/v0#/
+API Docs - https://app.swaggerhub.com/apis/DHOLAKIA98/News-Feed/v0
 
 Postman Collection - https://www.postman.com/warped-crater-862837/workspace/news-feed/collection/13803448-95027502-7e8c-45b1-8c7a-3faf165d7815?action=share&creator=13803448
 
 ## High Level Diagram
 ![High Level Diagram](docs/News-Feed-HLD.svg)
 
-## Entity Relation Diagram
-![Entity Relation Diagram](docs/News-Feed-ER-Diagram.svg)
+## Database Schema
+![Database Schema](docs/News-Feed-DB-Schema.svg)
 
 ## Environment Variables
 * MYSQL_PASSWORD
