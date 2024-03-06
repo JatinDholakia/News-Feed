@@ -2,6 +2,7 @@ package work.jatin.newsfeed.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,11 +12,12 @@ import work.jatin.newsfeed.enums.Category;
 @Setter
 @NoArgsConstructor
 public class PostRequestDto {
-    @NotBlank(message = "description is required")
+    @NotBlank(message = "Description is required")
+    @Size(max = 280, message = "Description cannot exceed 280 characters")
     private String description;
 
     private String fileName;
 
-    @NotNull(message = "category is required")
+    @NotNull(message = "Category is required")
     private Category category;
 }

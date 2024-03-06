@@ -9,13 +9,13 @@ import java.util.List;
 @Getter
 @Setter
 public class ErrorMessage {
-    private int statusCode;
+    private int status;
     private Date timestamp;
     private List<String> messages;
     private String description;
 
-    public ErrorMessage(int statusCode, List<String> messages, String description) {
-        this.statusCode = statusCode;
+    public ErrorMessage(int status, List<String> messages, String description) {
+        this.status = status;
         this.timestamp = new Date();
         this.messages = messages;
         this.description = description;
