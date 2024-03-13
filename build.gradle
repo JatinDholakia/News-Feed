@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
-    id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
+    id 'org.springdoc.openapi-gradle-plugin' version "1.8.0"
 }
 
 group = 'work.jatin'
@@ -40,6 +40,12 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+openApi {
+    apiDocsUrl.set("http://localhost:8080/api-docs")
+    outputDir.set(file("docs"))
+    outputFileName.set("swagger.json")
 }
 
 tasks.named('test') {
