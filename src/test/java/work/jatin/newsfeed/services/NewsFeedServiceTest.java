@@ -94,7 +94,7 @@ class NewsFeedServiceTest {
         long userId = 1L;
 
         List<FeedItem> feedItems = new ArrayList<>();
-        FeedItem feedItem = new FeedItem(2L, 2L, 1.0, LocalDateTime.now().minusSeconds(20));
+        FeedItem feedItem = new FeedItem(2L, 2L, 1.0);
         Post post = new Post("post 2", Category.TECH);
         User user = new User("user1", List.of(Category.TECH), 12.9716, 77.5946);
         user.setId(userId);
@@ -104,8 +104,7 @@ class NewsFeedServiceTest {
         feedItem.setPostId(post.getId());
         feedItems.add(feedItem);
         Sort.TypedSort<FeedItem> typedSort = Sort.sort(FeedItem.class);
-        Sort sort = typedSort.by(FeedItem::getScore).ascending()
-                .and(typedSort.by(FeedItem::getCreatedAt).descending());
+        Sort sort = typedSort.by(FeedItem::getScore).descending();
         Mockito.when(feedItemRepository.findByUserId(userId, PageRequest.of(0, pageSize, sort)))
                 .thenReturn(new PageImpl<>(feedItems));
         Mockito.when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
@@ -124,7 +123,7 @@ class NewsFeedServiceTest {
         post.setId(1L);
         post.setCategory(Category.TECH);
         post.setCreatedAt(LocalDateTime.now().minusSeconds(10));
-        FeedItem feedItem = new FeedItem(2L, post.getId(), 1.0, LocalDateTime.now());
+        FeedItem feedItem = new FeedItem(2L, post.getId(), 1.0);
 
         User follower = new User();
         follower.setInterests(List.of(Category.TECH));

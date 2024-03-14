@@ -49,7 +49,7 @@ public class NewsFeedService {
             return;
         }
         feedItemRepository.save(new FeedItem(followerNode.getUserId(), post.getId(),
-                RankingService.getScore(post, follower.getLatitude(), follower.getLongitude()), post.getCreatedAt()));
+                RankingService.getScore(post, follower.getLatitude(), follower.getLongitude())));
     }
 
     @Async
@@ -67,8 +67,7 @@ public class NewsFeedService {
 
     public List<FeedItemDto> getFeed(int pageNo, int pageSize, long userId) {
         Sort.TypedSort<FeedItem> typedSort = Sort.sort(FeedItem.class);
-        Sort sort = typedSort.by(FeedItem::getScore).ascending()
-                .and(typedSort.by(FeedItem::getCreatedAt).descending());
+        Sort sort = typedSort.by(FeedItem::getScore).descending();
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<FeedItem> feed = feedItemRepository.findByUserId(userId, pageable);
         List<FeedItemDto> result = new ArrayList<>();

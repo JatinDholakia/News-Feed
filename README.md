@@ -8,12 +8,20 @@ A news feed for your social networking application
 * Ranking of posts in feed is based on parameters such as : Likes count, Comments count, time of post and distance of post from user.
 
   
-API Docs - https://app.swaggerhub.com/apis/DHOLAKIA98/News-Feed/v0
+API Docs - http://jatin.work/#/news-feed/swagger-ui
 
-Postman Collection - https://www.postman.com/warped-crater-862837/workspace/news-feed/collection/13803448-95027502-7e8c-45b1-8c7a-3faf165d7815?action=share&creator=13803448
+Postman Collection - https://www.postman.com/warped-crater-862837/workspace/news-feed/collection/13803448-95027502-7e8c-45b1-8c7a-3faf165d7815
 
 ## High Level Diagram
 ![High Level Diagram](docs/News-Feed-HLD.svg)
+
+## Ranking Algorithm
+* Inspired by Reddit's [hot algorithm](https://medium.com/hacking-and-gonzo/how-reddit-ranking-algorithms-work-ef111e33d0d9)
+* As time goes by, newer posts will have a higher score.
+* Number of likes and comments have a logarithmic effect on score
+* Here, `y` is always positive
+
+![Reddit Hot Algorithm](docs/Reddit-Hot-Algorithm.webp)
 
 ## Database Schema
 ![Database Schema](docs/News-Feed-DB-Schema.svg)
